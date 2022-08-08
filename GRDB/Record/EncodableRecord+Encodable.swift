@@ -168,7 +168,7 @@ private class RecordEncoder<Record: EncodableRecord>: Encoder {
         try autoreleasepool(invoking: block)
         #else
         // No autoreleasepools available
-        block()
+        try block()
         #endif
     }
 }
