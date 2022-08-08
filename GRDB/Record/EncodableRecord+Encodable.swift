@@ -147,8 +147,7 @@ private class RecordEncoder<Record: EncodableRecord>: Encoder {
                 }
             } catch is JSONRequiredError {
                 // Encode to JSON
-                try autoreleasepool {
-                    
+                try withAutoreleasePool {
                     let jsonData = try Record.databaseJSONEncoder(for: key.stringValue).encode(value)
                     
                     // Store JSON String in the database for easier debugging and
@@ -162,6 +161,15 @@ private class RecordEncoder<Record: EncodableRecord>: Encoder {
                 }
             }
         }
+    }
+    
+    fileprivate func withAutoreleasePool(_ block: () throws -> Void) rethrows {
+        #if canImport(ObjectiveC)
+        try autoreleasepool(invoking: block)
+        #else
+        // No autoreleasepools available
+        block()
+        #endif
     }
 }
 
