@@ -407,8 +407,13 @@ public struct DatabaseMigrator {
                         // for an issue created by such databases.
                         //
                         // So let's create a "regular" temporary database:
+                        #if os(Linux)
+                        let tmpURL = URL(fileURLWithPath: NSTemporaryDirectory())
+                            .appendingPathComponent(NSUUID().uuidString)
+                        #else
                         let tmpURL = URL(fileURLWithPath: NSTemporaryDirectory())
                             .appendingPathComponent(ProcessInfo().globallyUniqueString)
+                        #endif
                         defer {
                             try? FileManager().removeItem(at: tmpURL)
                         }
