@@ -163,7 +163,7 @@ private class RecordEncoder<Record: EncodableRecord>: Encoder {
         }
     }
     
-    fileprivate func withAutoreleasePool(_ block: () throws -> Void) rethrows {
+    fileprivate func withAutoreleasePool<Result>(_ block: () throws -> Result) rethrows ->Result {
         #if canImport(ObjectiveC)
         try autoreleasepool(invoking: block)
         #else
